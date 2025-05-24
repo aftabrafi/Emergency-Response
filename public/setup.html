@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Help</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- 🚨 Navbar for Consistency -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">Emergency Help</a>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="setup.html" class="active">Setup</a></li>
+            <li><a href="contact.html">Contacts</a></li>
+        </ul>
+    </nav>
+
+    <!-- 🚨 Emergency Contact Setup Section -->
+    <div class="setup-container">
+        <form id="setup-form">
+            <label for="contact">Enter Emergency Contact (Phone or Email):</label>
+            <input type="text" id="contact" name="contact" placeholder="Phone Number or Email">
+            <button type="submit" class="add-contact-btn">Add Contact</button>
+        </form>
+    </div>
+
+    <ul id="contact-list"></ul>
+
+    <script src="setup.js"></script>
+</body>
+</html>

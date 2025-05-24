@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Emergency Help</title>
+
+    <!-- Bootstrap & Custom CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light">
+
+    <!-- 🚀 Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger px-4">
+        <a class="navbar-brand fs-3 fw-bold text-white" href="index.html">Emergency Help</a>
+    </nav>
+
+    <!-- 📊 Dashboard Container -->
+    <div class="container mt-5">
+        <h2 class="fw-bold text-center">🚨 Emergency Dashboard</h2>
+
+        <div class="row g-4 mt-4">
+            <!-- 🚨 Send SOS Alert -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow text-center">
+                    <h4 class="fw-bold">Send SOS Alert</h4>
+                    <p>Trigger an emergency alert instantly.</p>
+                    <button id="sos-button" class="btn btn-danger btn-lg w-100">Send SOS 🚨</button>
+                    <p id="sos-status" class="text-muted mt-2">Waiting for SOS alert...</p>
+                </div>
+            </div>
+
+            <!-- 📍 Share Location -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow text-center">
+                    <h4 class="fw-bold">Share My Location 📍</h4>
+                    <p>Let responders know where you are.</p>
+                    <button id="share-location-button" class="btn btn-primary btn-lg w-100">Share Location</button>
+                </div>
+            </div>
+
+            <!-- 📞 Manage Emergency Contacts (Moved Under Share Location) -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow text-center">
+                    <h4 class="fw-bold">Manage Emergency Contacts 📞</h4>
+                    <p>Keep your emergency contacts updated.</p>
+                    <button id="manage-contacts" class="btn btn-secondary btn-lg w-100">Manage Contacts</button>
+                </div>
+            </div>
+
+            <!-- 🌍 Live Emergency Contact Tracking (Amap) -->
+            <div class="col-md-6">
+                <div class="card p-4 shadow text-center">
+                    <h4 class="fw-bold">Emergency Contact Location</h4>
+                    <p id="contact-location-text">Tracking...</p>
+                    <div id="map"></div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ✅ Amap API -->
+    <div id="map"></div> <!-- ✅ Amap Integration -->
+<script src="https://webapi.amap.com/maps?v=2.0&key=1785b930c13a38b8565ef1734fb5cc08"></script> <!-- ✅ Replace with your API key -->
+<script>
+const map = new AMap.Map('map', {
+    zoom: 15,
+    
+});
+const marker = new AMap.Marker(); // ✅ Correct declaration
+map.add(marker);
+
+
+// ✅ Auto-set map to user's actual location
+navigator.geolocation.getCurrentPosition((position) => {
+    const userLatitude = position.coords.latitude;
+    const userLongitude = position.coords.longitude;
+
+    map.setCenter([userLongitude, userLatitude]); // ✅ Dynamically set center
+    marker.setPosition([userLongitude, userLatitude]); // ✅ Move marker to user's location
+
+    console.log("✅ Map updated to current location:", userLatitude, userLongitude);
+}, (error) => {
+    console.error("🚨 Error fetching location:", error);
+    alert("🚨 Unable to get location. Please enable GPS.");
+});
+
+
+// ✅ Fetch emergency contact location every 5 seconds
+setInterval(async () => {
+    const response = await fetch("/api/get-contact-location"); // ✅ No user ID needed
+    const data = await response.json();
+
+    if (data.latitude && data.longitude) {
+        const newPosition = [data.longitude, data.latitude];
+        marker.setPosition(newPosition);
+        map.setCenter(newPosition);
+        console.log("✅ Emergency contact location updated:", newPosition);
+    } else {
+        console.log("🚨 No valid location received, waiting for updates...");
+    }
+}, 5000);
+</script>
+
+
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=1785b930c13a38b8565ef1734fb5cc08"></script>
+</body>
+</html>
